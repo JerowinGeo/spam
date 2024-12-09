@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Spam Classifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Email Spam Classifier</h1>
+    <textarea id="emailContent" placeholder="Enter the email content here..."></textarea>
+    <button onclick="classifyEmail()">Classify Email</button>
+    <div class="result" id="result"></div>
+
+    <script>
+        function classifyEmail() {
+            const emailContent = document.getElementById('emailContent').value;
+            const spamKeywords = ["free", "win", "winner", "money", "urgent"]; // Example keywords
+
+            let result = "ham"; // Default classification
+
+            // Rule 1: Check for spam keywords
+            for (let keyword of spamKeywords) {
+                if (emailContent.toLowerCase().includes(keyword)) {
+                    result = "spam";
+                    break;
+                }
+            }
+
+            // Rule 2: Check for excessive punctuation
+            if ((emailContent.match(/[!$%^&*()]+/g) || []).length > 5) {
+                result = "spam";
+            }
+
+            // Rule 3: Check for links (URLs)
+            if (/http[s]?:\/\//.test(emailContent)) {
+                result = "spam";
+            }
+
+            // Rule 4: Check for phishing phrases
+            const phishingPhrases = ["bank account", "credit card", "social security", "password"];
+            for (let phrase of phishingPhrases) {
+                if (emailContent.toLowerCase().includes(phrase)) {
+                    result = "spam";
+                    break;
+                }
+            }
+
+            document.getElementById('result').innerText = `The email is classified as: ${result}`;
+        }
+    </script>
+
+</body>
+</html>
